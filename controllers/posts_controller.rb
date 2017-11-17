@@ -92,12 +92,17 @@ class PostsController < Sinatra::Base
 
     id = params[:id].to_i
     # create a variable of past information
-    post = $posts[id]
+    # post = $posts[id]
     # manipulate variable to new data
-    post[:title] = params[:title]
-    post[:body] = params[:body]
+    # post[:title] = params[:title]
+    # post[:body] = params[:body]
     #Change the original data to the new data
-    $posts[id] = post
+    # $posts[id] = post
+    post = Post.find(id)
+    post.title = params[:title]
+    post.body = params[:body]
+    post.save
+
     redirect "/"
 
   end
@@ -105,13 +110,15 @@ class PostsController < Sinatra::Base
   delete '/:id'  do
 
     id = params[:id].to_i
+
+    Post.destroy(id)
     # post = $posts[:id]
     # post[:title] = params[:title]
     # body[:body] = params[:body]
     #
     # $posts[id] = post
 
-    $posts.delete_at(id)
+    # $posts.delete_at(id)
     redirect '/'
 
   end
@@ -119,7 +126,10 @@ class PostsController < Sinatra::Base
   get '/:id/edit'  do
 
     id = params[:id].to_i
-    @post = $posts[id]
+    # @post = $posts[id]
+
+    @post = Post.find(id)
+
 
     erb :'posts/edit'
 
