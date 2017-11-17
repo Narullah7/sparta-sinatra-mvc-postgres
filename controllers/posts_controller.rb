@@ -39,11 +39,12 @@ class PostsController < Sinatra::Base
 
   get '/new'  do
 
-    @post = {
-      id: "",
-      title: "",
-      body: ""
-    }
+    # @post = {
+    #   id: "",
+    #   title: "",
+    #   body: ""
+    # }
+    @post = Post.new
 
     erb :'posts/new'
 
