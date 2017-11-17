@@ -30,7 +30,8 @@ class PostsController < Sinatra::Base
 
       @title = "Blog posts"
 
-      @posts = $posts
+      # @posts = $posts
+      @posts = Post.all
 
       erb :'posts/index'
 
@@ -38,7 +39,13 @@ class PostsController < Sinatra::Base
 
   get '/new'  do
 
-    "NEW"
+    @post = {
+      id: "",
+      title: "",
+      body: ""
+    }
+
+    erb :'posts/new'
 
   end
 
@@ -48,7 +55,8 @@ class PostsController < Sinatra::Base
     id = params[:id].to_i
 
     # make a single post object available in the template
-    @post = $posts[id]
+    # @post = $posts[id]
+    @post = Post.find(id)
 
     erb :'posts/show'
 
@@ -56,7 +64,24 @@ class PostsController < Sinatra::Base
 
   post '/' do
 
-    "CREATE"
+    # new_post = {
+    #   id: $posts.length,
+    #   title: params[:title],
+    #   body: params[:body]
+    # }
+    #
+    # $posts.push(new_post)
+
+    post = Post.new
+
+    post.title = params[:title]
+    post.body = params[:body]
+
+    post.save
+
+    redirect "/"
+
+
 
   end
 
@@ -65,19 +90,38 @@ class PostsController < Sinatra::Base
 
   put '/:id'  do
 
-    "UPDATE: #{params[:id]}"
+    id = params[:id].to_i
+    # create a variable of past information
+    post = $posts[id]
+    # manipulate variable to new data
+    post[:title] = params[:title]
+    post[:body] = params[:body]
+    #Change the original data to the new data
+    $posts[id] = post
+    redirect "/"
 
   end
 
   delete '/:id'  do
 
-    "DELETE: #{params[:id]}"
+    id = params[:id].to_i
+    # post = $posts[:id]
+    # post[:title] = params[:title]
+    # body[:body] = params[:body]
+    #
+    # $posts[id] = post
+
+    $posts.delete_at(id)
+    redirect '/'
 
   end
 
   get '/:id/edit'  do
 
-    "EDIT: #{params[:id]}"
+    id = params[:id].to_i
+    @post = $posts[id]
+
+    erb :'posts/edit'
 
   end
 
